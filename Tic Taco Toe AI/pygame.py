@@ -5,16 +5,18 @@ import os
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 SCREEN_SIZE = (800, 640)
 
+TITLE_POS = (250, 100)
+ONEPLAYER_POS  = (300, 300) 
+TWOPLAYER_POS = (300, 450)
 CORNER_POS = (600, 10)
-BUTTON_SIZE = (200, 100)
+BUTTON_SIZE = (200, 120)
 
+CYAN = (224,255,255)
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 GREEN = (50, 255, 50)
 BLUE = (50, 50, 255)
 RED = (255, 50, 50)
-
-REPLAY_MESSAGE = 'Press space to play again'
 
 class Screen():
 	def __init__(self, title, width=SCREEN_SIZE[0], height=SCREEN_SIZE[1],
@@ -65,6 +67,7 @@ class Button():
 		if(self.CurrentState):
 			pg.draw.rect(display, self.fbcolour,
 						(self.x, self.y, self.sx, self.sy))
+		  
 		else:
 			pg.draw.rect(display, self.fbcolour,
 						(self.x, self.y, self.sx, self.sy))
@@ -85,45 +88,48 @@ class Button():
 		else:
 			self.CurrentState = False
 			return False
+			
+class Title(Button):
+  def __init__(self, x, y, sx, sy, bcolour, fbcolour,
+				font, fcolour, text):
+  	  self.x = x
+  	  self.y = y
+  	  self.sx = sx
+  	  self.sy = sy
+  	  self.fontsize = 100
+  	  self.bcolour = bcolour
+  	  self.fbcolour = fbcolour
+  	  self.font = font
+  	  self.fcolour = fcolour
+  	  self.text = text
+  	  self.CurrentState = False
+  	  self.buttonf = pg.font.SysFont(font, self.fontsize)
+				  
 
 pg.init()
 pg.font.init()
 
 menuScreen = Screen("Menu Screen")
 
-normalPlayScreen = Screen("Strategic Tic Tac Toe Play Screen")
+twoPlayerScreen = Screen("One Player Screen")
 
-strategicPlayScreen
+onePlayerScreen = Screen("Two Player Screen")
 
-normalTicTactToeScreen
-
-strategicTicTactToeScreen
-
-smallBoardScreen
-
-mediumBoardScreen
-
-largeBoardScreen
-
-control_bar = Screen("Control Screen")
+controlBar = Screen("Control Screen")
 
 win = menuScreen.makeCurrentScreen()
 
-MENU_BUTTON = Button(CORNER_POS[0], CORNER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
-					BLACK, "TimesNewRoman",
-					(255, 255, 255), "Play")
+TITLE_BUTTON = Title(TITLE_POS[0], TITLE_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
+						CYAN, "TimesNewRoman",
+						(50, 50, 255), "TIC TAC TOE")
 
-PLAY_BUTTON = Button(CORNER_POS[0], CORNER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
+ONE_PLAYER_BUTTON = Button(ONEPLAYER_POS[0], ONEPLAYER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
 					BLACK, "TimesNewRoman",
-					(255, 255, 255), "Play")
-
-ONE_PLAYER_BUTTON = Button(CORNER_POS[0], CORNER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
-					BLACK, "TimesNewRoman",
-					(255, 255, 255), "Play")
+					(255, 255, 255), "One Player")
 					
-TWO_PLAYER_BUTTON = Button(CORNER_POS[0], CORNER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
+TWO_PLAYER_BUTTON = Button(TWOPLAYER_POS[0], TWOPLAYER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
 					BLACK, "TimesNewRoman",
-					(255, 255, 255), "Play")
+					(255, 255, 255), "Two Player")
 
 BACK_BUTTON = Button(CORNER_POS[0], CORNER_POS[1], BUTTON_SIZE[0], BUTTON_SIZE[1], (0, 0, 0),
 						BLACK, "TimesNewRoman",
@@ -134,26 +140,44 @@ toggle = False
 
 while not done:
 	menuScreen.screenUpdate()
-	control_bar.screenUpdate()
+	onePlayerScreen.screenUpdate()
+	twoPlayerScreen.screenUpdate()
+	controlBar.screenUpdate()
 	mouse_pos = pg.mouse.get_pos()
 	mouse_click = pg.mouse.get_pressed()
 	keys = pg.key.get_pressed()
-	if menuScreen.checkUpdate(WHITE):
-		control_barbutton = ONE_PLAYER_BUTTON.focusCheck(mouse_pos,
+	if menuScreen.checkUpdate(CYAN):
+		button_one = ONE_PLAYER_BUTTON.focusCheck(mouse_pos,
+												mouse_click)
+		button_two = TWO_PLAYER_BUTTON.focusCheck(mouse_pos,
 												mouse_click)
 		ONE_PLAYER_BUTTON.showButton(menuScreen.returnTitle())
+		TWO_PLAYER_BUTTON.showButton(menuScreen.returnTitle())
+		TITLE_BUTTON.showButton(menuScreen.returnTitle())
 
-		if control_barbutton:
-			win = control_bar.makeCurrentScreen()
+		if button_one:
+			win = onePlayerScreen.makeCurrentScreen()
 			menuScreen.endCurrentScreen()
+		if button_two:
+		  win = twoPlayerScreen.makeCurrentScreen()
+		  menuScreen.endCurrentScreen()
 
-	elif control_bar.checkUpdate(WHITE):
+	elif onePlayerScreen.checkUpdate(WHITE):
 		return_back = BACK_BUTTON.focusCheck(mouse_pos,
 												mouse_click)
-		BACK_BUTTON.showButton(control_bar.returnTitle())
+		BACK_BUTTON.showButton(onePlayerScreen.returnTitle())
 
 		if return_back:
-			control_bar.endCurrentScreen()
+			onePlayerScreen.endCurrentScreen()
+			win = menuScreen.makeCurrentScreen()
+	
+	elif twoPlayerScreen.checkUpdate(WHITE):
+		return_back = BACK_BUTTON.focusCheck(mouse_pos,
+												mouse_click)
+		BACK_BUTTON.showButton(twoPlayerScreen.returnTitle())
+
+		if return_back:
+			twoPlayerScreen.endCurrentScreen()
 			win = menuScreen.makeCurrentScreen()
 	for event in pg.event.get():
 		if(event.type == pg.QUIT):
