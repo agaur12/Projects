@@ -1,6 +1,7 @@
 import pygame as pg
 import sys
 import os
+from time import sleep, time
 import tttgame as tg
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
@@ -168,6 +169,8 @@ while not done:
 			onePlayerScreen.endCurrentScreen()
 			win = menuScreen.makeCurrentScreen()
 		'''
+		pg.quit()
+		sys.exit()
 		tg.one_player_game()
 	
 	elif twoPlayerScreen.checkUpdate(WHITE):
@@ -178,6 +181,8 @@ while not done:
 			twoPlayerScreen.endCurrentScreen()
 			win = menuScreen.makeCurrentScreen()
 		'''
+		pg.quit()
+		sys.exit()
 		tg.two_player_game()
 	for event in pg.event.get():
 		if(event.type == pg.QUIT):

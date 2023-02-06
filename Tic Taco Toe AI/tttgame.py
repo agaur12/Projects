@@ -4,6 +4,8 @@ import os
 import tttbot as tb
 from time import sleep, time
 
+pg.init()
+
 def one_player_game():
     bot_board = [
             [ '_', '_', '_' ],
@@ -19,7 +21,7 @@ def one_player_game():
     BLUE = (50, 50, 255)
     RED = (255, 50, 50)
     REPLAY_MESSAGE = 'Press space to play again'
-
+    
     pg.init()
     board_font = pg.font.SysFont('arial', 80)
     game_over_font = pg.font.SysFont('monospace', 80, bold=True)
@@ -279,6 +281,7 @@ def one_player_game():
         main()
 
 def two_player_game():
+    os.environ['SDL_VIDEO_CENTERED'] = '1'
     GAME_SIZE = (800, 640)
 
     BLACK = (0, 0, 0)
@@ -287,7 +290,7 @@ def two_player_game():
     BLUE = (50, 50, 255)
     RED = (255, 50, 50)
     REPLAY_MESSAGE = 'Press space to play again'
-
+    
     pg.init()
     board_font = pg.font.SysFont('arial', 80)
     game_over_font = pg.font.SysFont('monospace', 80, bold=True)
@@ -520,6 +523,6 @@ def two_player_game():
     if __name__ == '__main__':
         main()
 
-one_player_game()
+#one_player_game()
 
 #two_player_game()
