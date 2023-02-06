@@ -1,14 +1,15 @@
 import pygame as pg
 import sys
 import os
+import tttgame as tg
 
 os.environ['SDL_VIDEO_CENTERED'] = '1'
 SCREEN_SIZE = (800, 640)
 
-TITLE_POS = (250, 100)
+TITLE_POS = (300, 100)
 ONEPLAYER_POS  = (300, 300) 
 TWOPLAYER_POS = (300, 450)
-CORNER_POS = (600, 10)
+CORNER_POS = (600, 0)
 BUTTON_SIZE = (200, 120)
 
 CYAN = (224,255,255)
@@ -146,10 +147,8 @@ while not done:
 	mouse_click = pg.mouse.get_pressed()
 	keys = pg.key.get_pressed()
 	if menuScreen.checkUpdate(CYAN):
-		button_one = ONE_PLAYER_BUTTON.focusCheck(mouse_pos,
-												mouse_click)
-		button_two = TWO_PLAYER_BUTTON.focusCheck(mouse_pos,
-												mouse_click)
+		button_one = ONE_PLAYER_BUTTON.focusCheck(mouse_pos, mouse_click)
+		button_two = TWO_PLAYER_BUTTON.focusCheck(mouse_pos, mouse_click)
 		ONE_PLAYER_BUTTON.showButton(menuScreen.returnTitle())
 		TWO_PLAYER_BUTTON.showButton(menuScreen.returnTitle())
 		TITLE_BUTTON.showButton(menuScreen.returnTitle())
@@ -162,22 +161,24 @@ while not done:
 			menuScreen.endCurrentScreen()
 
 	elif onePlayerScreen.checkUpdate(WHITE):
-		return_back = BACK_BUTTON.focusCheck(mouse_pos,
-												mouse_click)
+		'''
+		return_back = BACK_BUTTON.focusCheck(mouse_pos, mouse_click)
 		BACK_BUTTON.showButton(onePlayerScreen.returnTitle())
-
 		if return_back:
 			onePlayerScreen.endCurrentScreen()
 			win = menuScreen.makeCurrentScreen()
+		'''
+		tg.one_player_game()
 	
 	elif twoPlayerScreen.checkUpdate(WHITE):
-		return_back = BACK_BUTTON.focusCheck(mouse_pos,
-												mouse_click)
+		'''
+		return_back = BACK_BUTTON.focusCheck(mouse_pos, mouse_click)
 		BACK_BUTTON.showButton(twoPlayerScreen.returnTitle())
-
 		if return_back:
 			twoPlayerScreen.endCurrentScreen()
 			win = menuScreen.makeCurrentScreen()
+		'''
+		tg.two_player_game()
 	for event in pg.event.get():
 		if(event.type == pg.QUIT):
 			done = True
